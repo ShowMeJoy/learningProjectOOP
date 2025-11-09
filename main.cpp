@@ -16,22 +16,53 @@ public:
     const std::string& name() const {return name_;}
 };
 
-class Device {
-    int networkAddress_;
-    std::string deviceType_;
+class Computer {
+    int id_;
+    std::string networkAddress_;
+    std::vector<Software> installed_;
 public:
-    Device() = default;
-    Device (const std::string& type, const int address) 
-        : networkAddress_(address), deviceType_(type) {
-        if (type.empty()) throw std::invalid_argument("Empty device type");
-        if (address < 0) throw std::invalid_argument("Negative network address");
-    }
-    int address() const {return networkAddress_;}
-    const std::string& device() const {return deviceType_;}
-};
+    // Конструктор по умолчанию
+    Computer() = default;
 
+    // Основной конструктор с проверками
+    Computer (int id, const std::string& address) 
+        : id_(validateId(id))
+    {
+        setNetworkAddress(address);
+    }
+
+    // Сеттер с проверкой
+    void setNetworkAddress(const std::string& addr) {
+        if (addr.empty()) throw std::invalid_argument("Invalid IPv4 address" + addr);
+        networkAddress_ = addr;
+    } 
+
+    // Геттеры
+    const std::string getNetworkAddress() const {return networkAddress_;}
+    int getId()  {return id_;}
+    std::string getSoftwareInfo(int licence) {
+        for (const auto& s : installed_) {
+            if (s.licenseNo() == licence) {
+                return "License №:" + std::to_string(s.licenseNo()) + ", Software: " + s.name();
+            }
+        }
+        return "Software with license " + std::to_string(licence) + " not found";
+    }
+
+    void addSoftware(Software s) {
+        installed_.push_back(s);
+    }
+private:
+    // Вспомогательная функция для проверки id
+    static int validateId(int id) {
+        if (id < 0) throw std::invalid_argument("Negative id");
+        return id;
+    }
+};
+                
 class User {
     std::string username_;
+    Computer owned_;
 public:
     User() = default;
     User (const std::string& name) 
@@ -41,22 +72,17 @@ public:
     const std::string& name() const {return username_;}
 };
 
-class Computer {
-public:
-    User person;
-    Device device;
-    std::vector<Software> soft;
-
-    Computer(const std::string& username) : person(username) {}
-};
-
 int main () {
-    Computer pc1("Alice");
-    pc1.soft.push_back(Software("Windows", 42));
-    pc1.device = Device("Laptop", 21);
+    // Computer pc1("Alice");
+    // pc1.soft.push_back(Software("Windows", 42));
+    // pc1.device = Device("Laptop", 21);
 
-    if (pc1.device.address() == 21 && pc1.device.device() == "Laptop") {
-        std::cout << "It's " << pc1.person.name() 
-        << " with Windows 11 with licence №" << pc1.soft[0].licenseNo() << std::endl;
-    }
-}
+    // if (pc1.device.address() == 21 && pc1.device.device() == "Laptop") {
+    //     std::cout << "It's " << pc1.person.name() 
+    //     << " with Windows 11 with licence №" << pc1.soft[0].licenseNo() << std::endl;
+    // }
+    Computer pc1(42, "192.168.7.1");
+    pc1.addSoftware(Software("Browser", 42));
+    std::cout << pc1.getNetworkAddress() << " " << pc1.getId() << std::endl;
+    std::cout << pc1.getSoftwareInfo(42) << '\n' << pc1.getSoftwareInfo(52) << '\n';
+};
