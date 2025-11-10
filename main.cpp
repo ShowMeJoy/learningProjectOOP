@@ -68,14 +68,13 @@ public:
 };
 
 class Inventory {
+    // Класс, объединяющий юзеров с устройствами
     std::vector<User> users_;
     std::vector<int> licenses_;
 public:
-    // Inventory() = default;
-    // Inventory (const std::vector<User>& users, const std::vector<int>& licenses) 
-    //     : users_(users), licenses_(licenses) {
-    //         if (users.empty() || licenses.empty()) throw std::invalid_argument("Empty list!");
-    //     }
+    Inventory() = default;
+    Inventory (const std::vector<User> users, std::vector<int> licenses)
+        : users_(users), licenses_(licenses) {}
     void addUser(User user) {
         users_.push_back(user);
     }    
@@ -88,7 +87,7 @@ public:
         for (const auto& user : users_) {
             for (const auto& soft : user.getComputer().getInstalled()) {
                 if (std::find(licenses_.begin(), licenses_.end(), soft.licenseNo()) != licenses_.end()) {
-                    result.push_back(user.getName() + " has " + soft.name() + 
+                    result.push_back(user.getName() + " has the " + soft.name() + 
                                     " (license " + std::to_string(soft.licenseNo()) + ")");
                 }
             }
@@ -100,29 +99,25 @@ public:
 int main () {
 
     Computer pc1(42, "192.168.7.1");
+    pc1.addSoftware({"Browser", 101});
+    pc1.addSoftware({"Malware", 202});
+
     Computer pc2(21, "192.168.0.1");
+    pc2.addSoftware({"Game", 303});
+    pc2.addSoftware({"IDE", 404});
+
     Computer pc3(33, "192.168.1.3");
+    pc3.addSoftware({"Browser", 42});
+    pc3.addSoftware({"MediaPlayer", 11});
 
-    pc1.addSoftware(Software("Browser", 101));
-    pc1.addSoftware(Software("Malware", 202));
-    pc2.addSoftware(Software("Game", 303));
-    pc2.addSoftware(Software("IDE", 404));
-    pc3.addSoftware(Software("Browser", 42));
-    pc3.addSoftware(Software("MediaPlayer", 11));
+    std::vector<User> users = {
+        {"Alice", pc1},
+        {"Bob", pc2},
+        {"George", pc3}
+    };
+    std::vector<int> licenses = {101, 202, 303};
 
-    User user1("Alice", pc1);
-    User user2("Bob", pc2);
-    User user3("George", pc3);
-
-    Inventory inv;
-
-    inv.addUser(user1);
-    inv.addUser(user2);
-    inv.addUser(user3);
-
-    inv.addLicenses(101);
-    inv.addLicenses(202);
-    inv.addLicenses(303);
+    Inventory inv(users, licenses);
 
     for (auto& line : inv.findMatches()) {
         std::cout << line << '\n';
