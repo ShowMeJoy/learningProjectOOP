@@ -1,0 +1,88 @@
+@startuml
+class "::std::string" as C_0001275076681856179721
+class C_0001275076681856179721 {
+__
+}
+class "::std::vector<Software>" as C_0015419281037227472111
+class C_0015419281037227472111 {
+__
+}
+class "::std::vector<User>" as C_0013980858747368180470
+class C_0013980858747368180470 {
+__
+}
+class "::std::vector<int>" as C_0009228492206209329687
+class C_0009228492206209329687 {
+__
+}
+class "::std::vector<std::string>" as C_0001347152004389415025
+class C_0001347152004389415025 {
+__
+}
+class "::Software" as C_0018187343320314024796
+class C_0018187343320314024796 {
++Software() = default : void
++Software(const std::string & name, int number) : void
+..
++licenseNo() const : int
++name() const : const std::string &
+__
+-license_no_ : int
+-name_ : std::string
+}
+class "::Computer" as C_0013366661595650620782
+class C_0013366661595650620782 {
++Computer() = default : void
++Computer(int id, const std::string & address) : void
+..
++addSoftware(Software s) : void
++getId() const : int
++getInstalled() const : const std::vector<Software> &
++getNetworkAddress() const : const std::string
++setNetworkAddress(const std::string & addr) : void
+{static} -validateId(int id) : int
+__
+-id_ : int
+-installed_ : std::vector<Software>
+-networkAddress_ : std::string
+}
+class "::User" as C_0013909460443608576024
+class C_0013909460443608576024 {
++User() = default : void
++User(const std::string & name, Computer comp) : void
+..
++getComputer() const : const Computer &
++getName() const : const std::string &
+__
+-computer_ : Computer
+-username_ : std::string
+}
+class "::Inventory" as C_0005114490176033629175
+class C_0005114490176033629175 {
++Inventory() = default : void
++Inventory(const std::vector<User> users, std::vector<int> licenses) : void
+..
++addLicenses(int licenses) : void
++addUser(User user) : void
++findMatches() const : std::vector<std::string>
+__
+-licenses_ : std::vector<int>
+-users_ : std::vector<User>
+}
+C_0015419281037227472111 ..> C_0018187343320314024796
+C_0013980858747368180470 ..> C_0013909460443608576024
+C_0001347152004389415025 ..> C_0001275076681856179721
+C_0018187343320314024796 o-- C_0001275076681856179721 : -name_
+C_0013366661595650620782 ..> C_0018187343320314024796
+C_0013366661595650620782 o-- C_0001275076681856179721 : -networkAddress_
+C_0013366661595650620782 o-- C_0015419281037227472111 : -installed_
+C_0013909460443608576024 o-- C_0001275076681856179721 : -username_
+C_0013909460443608576024 o-- C_0013366661595650620782 : -computer_
+C_0005114490176033629175 ..> C_0013909460443608576024
+C_0005114490176033629175 ..> C_0001347152004389415025
+C_0005114490176033629175 o-- C_0013980858747368180470 : -users_
+C_0005114490176033629175 o-- C_0009228492206209329687 : -licenses_
+
+'Generated with clang-uml, version 0.6.2
+'LLVM version Debian clang version 19.1.7 (3~deb12u1)
+@enduml
