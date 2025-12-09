@@ -3,3 +3,4 @@
 *.clang-uml
 *.deb
 *.json
+.gitignore
