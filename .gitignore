@@ -1,7 +1,0 @@
-*.out
-/build/
-*.clang-uml
-*.deb
-*.json
-.gitignore
-classes.hpp.gch
