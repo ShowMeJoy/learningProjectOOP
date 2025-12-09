@@ -4,5 +4,4 @@
 *.deb
 *.json
 .gitignore
-main
-*.gch
+classes.hpp.gch
