@@ -1,6 +1,8 @@
 #include <iostream>
 #include "classes.hpp"
 
+// cmake -S . -B build && cmake --build build --target run
+
 int main () {
 
     Computer pc1(42, "192.168.7.1");
@@ -27,4 +29,4 @@ int main () {
     for (auto& line : inv.findMatches()) {
         std::cout << line << '\n';
     }
-};
+}
